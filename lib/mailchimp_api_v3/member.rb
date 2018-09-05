@@ -53,6 +53,16 @@ module Mailchimp
       def update(new_data)
         super self.class.parse_name_from(new_data)
       end
+
+      def enable_gdpr
+        return if @data.blank?
+        new_data = @data.dup
+        return unless new_data['marketing_permissions']
+        new_data['marketing_permissions'].each do |item|
+          item['enabled'] = true
+        end
+        update new_data
+      end
     end
 
     class Members < Collection
